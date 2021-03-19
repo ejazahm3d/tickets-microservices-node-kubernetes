@@ -1,9 +1,9 @@
-import express from "express"
+import express from 'express';
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('', (req, res) => {
-    res.send("Hi there")
-})
+router.get('/api/users/currentuser', (req, res) => {
+  res.send({hello: "world"});
+});
 
-export { router as currentUserRouter }
+export { router as currentUserRouter };
