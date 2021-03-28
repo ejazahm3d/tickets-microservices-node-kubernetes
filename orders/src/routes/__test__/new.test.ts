@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import request from "supertest";
-import jwt from "jsonwebtoken";
 import { app } from "../../app";
 import { Ticket } from "../../models/ticket";
 import { Order, OrderStatus } from "../../models/order";
@@ -19,7 +18,11 @@ it("returns an error if the ticket does not exist", async () => {
 });
 
 it("returns an error if the ticket is already reserved", async () => {
-  const ticket = Ticket.build({ title: "some", price: 12 });
+  const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
+    title: "some",
+    price: 12,
+  });
   await ticket.save();
 
   const order = Order.build({
@@ -41,7 +44,11 @@ it("returns an error if the ticket is already reserved", async () => {
 });
 
 it("reserves a ticket", async () => {
-  const ticket = Ticket.build({ title: "some", price: 12 });
+  const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
+    title: "some",
+    price: 12,
+  });
   await ticket.save();
   await request(app)
     .post("/api/orders")
@@ -53,7 +60,11 @@ it("reserves a ticket", async () => {
 });
 
 it("publishes an event", async () => {
-  const ticket = Ticket.build({ title: "some", price: 12 });
+  const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
+    title: "some",
+    price: 12,
+  });
   await ticket.save();
   await request(app)
     .post("/api/orders")
