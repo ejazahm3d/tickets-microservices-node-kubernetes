@@ -7,6 +7,7 @@ import {
 } from "@sgtickets/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
+import { OrderCreatedPublisher } from "../events/publishers/order-created-publisher";
 import { Order } from "../models/order";
 import { Ticket } from "../models/ticket";
 import { natsWrapper } from "../nats-wrapper";
@@ -41,6 +42,18 @@ router.post(
     });
 
     await order.save();
+
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      userId: order.userId,
+      status: order.status,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: ticket.id,
+        price: ticket.price,
+      },
+      version: order.__v!,
+    });
 
     res.status(201).send(order);
   }
