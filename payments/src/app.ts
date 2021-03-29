@@ -4,6 +4,7 @@ import { json } from "body-parser";
 import cookieSession from "cookie-session";
 import { currentUser, errorHandler } from "@sgtickets/common";
 import { NotFoundError } from "@sgtickets/common";
+import { CreateChargeRouter } from "./routes/new";
 
 const app = express();
 app.set("trust proxy", true);
@@ -17,6 +18,8 @@ app.use(
 );
 
 app.use(currentUser);
+
+app.use(CreateChargeRouter);
 
 app.all("*", async () => {
   throw new NotFoundError();
